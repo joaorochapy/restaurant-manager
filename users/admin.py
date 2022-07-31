@@ -4,12 +4,12 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth import get_user_model
 
 # Register your models here.
-Usuario = get_user_model()
+User = get_user_model()
 
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
-    model = Usuario
+    model = User
     list_display = ('email', 'is_staff', 'is_active')
 
     fieldsets = (
@@ -30,4 +30,4 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ('email',)
     ordering = ('email',)
 
-admin.site.register(Usuario, CustomUserAdmin)
+admin.site.register(User, CustomUserAdmin)

@@ -1,12 +1,17 @@
 from django.db import models
 from django.utils.crypto import get_random_string
 from django.utils import timezone
+from django.urls import reverse
 
 # Create your models here.
 class Table(models.Model):
     number = models.CharField(verbose_name='Número',max_length=3, unique=True)
     slug = models.SlugField(verbose_name='Slug', max_length=8, blank=True,
                             unique=True)
+
+    class Meta:
+        verbose_name = 'Mesa'
+        verbose_name_plural = 'Mesa'
 
     def __str__(self):
         return f'Mesa {self.number}'
@@ -37,6 +42,14 @@ class Table(models.Model):
                     self.slug = get_random_string(8)
 
 
+    def get_absolute_url(self):
+        return reverse('client_table', args=[self.slug])
+
+
+    def get_menu_url(self):
+        return reverse('client_menu', args=[self.slug])
+
+
 class WaiterOrderPad(models.Model):
     STATUS_OPTIONS = (
         ('open', 'Aberta'),
@@ -54,6 +67,10 @@ class WaiterOrderPad(models.Model):
                               choices=STATUS_OPTIONS, default='aberta')
     amount = models.DecimalField(verbose_name='Valor total', max_digits=12,
                                  decimal_places=2, default=0.00)
+
+    class Meta:
+        verbose_name = 'Comanda'
+        verbose_name_plural = 'Comandas'
 
     def save(self, *args, **kwargs):
         # Creates and saves slug
@@ -79,10 +96,10 @@ class WaiterOrderPad(models.Model):
 
 
     def update_amount(self):
-        itens = OrderedItem.objects.filter(waiter_order_pad=self)
+        items = OrderedItem.objects.filter(waiter_order_pad=self)
         new_amount = 0.00
 
-        for item in itens:
+        for item in items:
             new_amount += float(item.price)
 
         self.amount = new_amount
@@ -99,6 +116,8 @@ class Category(models.Model):
     order = models.IntegerField(verbose_name='Ordem', default=0, blank=True)
 
     class Meta:
+        verbose_name = 'Categoria'
+        verbose_name_plural = 'Categorias'
         ordering = ('order', 'name')
 
 
@@ -117,6 +136,10 @@ class MenuItem(models.Model):
     need_to_prepare = models.BooleanField(verbose_name='Necessita de preparo?',
                                           default=True)
     description = models.TextField(verbose_name='Descrição', blank=True)
+
+    class Meta:
+        verbose_name = 'Item | Cardapio'
+        verbose_name_plural = 'Itens | Cardapio'
 
     def __str__(self):
         return self.item
@@ -144,6 +167,8 @@ class OrderedItem(models.Model):
                                          blank=True, null=True)
 
     class Meta:
+        verbose_name = 'Item | Pedido'
+        verbose_name_plural = 'Itens | Pedidos'
         ordering = ('order_time', 'item')
 
 

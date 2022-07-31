@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'restaurant.apps.RestaurantConfig',
     'clients.apps.ClientsConfig',
+    'waiters.apps.WaitersConfig',
 
     # Terceiros
     'crispy_forms',

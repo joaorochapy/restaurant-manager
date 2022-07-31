@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+    <link rel="stylesheet" href="{% static 'css/menu_client.css' %}">
+{% endblock meta %}
+
+{% block title %}
+    Cardápio | Mesa {{ table.number }}
+{% endblock title %}
+
+{% block client_table_url %}
+    <a href="{{ table.get_absolute_url }}"><i class="fa-solid fa-house fa-2x"></i></a>
+{% endblock client_table_url %}
+
+{% block table %}
+    Mesa {{ table.number }}
+{% endblock table %}
+
+{% block content %}
+    <div class="container">
+        <div class="card p-3">
+            <div class="title-card">
+                <i class="fa-solid fa-book-open fa-2x"></i>
+                <h1>Cardápio</h1>
+            </div>
+            {% for category in categories %}
+                <a class="category" data-bs-toggle="collapse" href="#c-{{ category.id }}" role="button" aria-expanded="false" aria-controls="c-{{ category.id }}">
+                    <h5>{{ category }}</h5>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+                <div class="collapse" id="c-{{ category.id }}">
+                    {% for item in category.menuitem_set.all %}
+                        {% if item.active %}
+                            <div class="menu-item">
+                                <div class="price-title">
+                                    <p class="item-title">{{ item }}</p>
+                                    <p><span class="item-value">R$ {{ item.price }}</span></p>
+                                </div>
+                                {% if item.description %}
+                                    <p>{{ item.description }}</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            {% if items_without_category %}
+                <a class="category" data-bs-toggle="collapse" href="#without-category" role="button" aria-expanded="false" aria-controls="without-category">
+                    <h5>Itens sem categoria</h5>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+                <div class="collapse" id="without-category">
+                    {% for item in items_without_category %}
+                        {% if item.active %}
+                            <div class="menu-item">
+                                <div class="price-title">
+                                    <p class="item-title">{{ item }}</p>
+                                    <p><span class="item-value">R$ {{ item.price }}</span></p>
+                                </div>
+                                {% if item.description %}
+                                    <p>{{ item.description }}</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $(".category").click(function() {
+                $("i", this).toggleClass("fa-chevron-right fa-chevron-down");
+                $(this).toggleClass("clicked")
+            })
+        })
+    </script>
+{% endblock content %}
+
+{% block client_menu %}
+    <a class="btn btn-dark mb-2" href="#">Solicitar atendimento</a>
+{% endblock client_menu %}
+
+{% block client_menu %}
+    <a class="btn btn-dark mb-2" href="{{ table.get_menu_url }}">Ver cardápio</a>
+{% endblock client_menu %}

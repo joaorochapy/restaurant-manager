@@ -18,6 +18,8 @@
 
         <!-- Style -->
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        {% block meta %}
+        {% endblock meta %}
 
        <!-- Google Font -->
        <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,7 +31,7 @@
     <body>
         <header>
             <div class="header-container">
-                <a href=""><i class="fa-solid fa-house fa-2x"></i></a>
+                {% block client_table_url %}{% endblock client_table_url %}
                 <h2>{% block table %}{% endblock table %}</h2>
             </div>
         </header>
@@ -45,10 +47,10 @@
         <div class="pt-5 pb-5"></div>
 
         <footer>
-            <nav class="navbar fixed-botton navbar-light bg-light">
+            <nav class="navbar fixed-bottom navbar-light bg-light">
                 <div class="container d-flex flex-column align-items-stretch">
-                    <a class="btn btn-dark mb-2" href="#">Solicitar atendimento</a>
-                    <a class="btn btn-dark mb-2" href="#">Ver cardápio</a>
+                    {% block request_service %}{% endblock request_request %}
+                    {% block client_menu %}{% endblock client_menu %}
                 </div>
             </nav>
         </footer>

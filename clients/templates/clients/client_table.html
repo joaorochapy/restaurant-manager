@@ -2,16 +2,81 @@
 
 {% block title %}Mesa {{ table.number }}{% endblock title %}
 
+{% block client_table_url %}
+    <a href="{{ table.get_absolute_url }}"><i class="fa-solid fa-house fa-2x"></i></a>
+{% endblock client_table_url %}
+
 {% block table %}Mesa {{ table.number }}{% endblock table %}
 
 {% block content %}
     <div class="container">
         <div class="card p-1">
             {% if waiter_order_pad %}
-                Há comanda aberta na mesa
+                <h2 class="p-3">Minha comanda</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Pedido</th>
+                            <th scope="col">Valor</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if waiter_order_pad.ordereditem_set.all %}
+                            {% for orders_status in orders %}
+                                {% for order in orders_status %}
+                                    <tr>
+                                        <td>
+                                            <p>{{ order }}</p>
+                                            {% if order.note %}
+                                            <a tabindex="0" class="btn btn-outline-primary" 
+                                               role="button" data-bs-toggle="popover" 
+                                               data-bs-trigger="focus" title="Observação" 
+                                               data-bs-content="{{ order.note }}">
+                                                OBS.:
+                                            </a> 
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ order.price }}</td>
+                                        <td>{{ order.get_status_display }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                        {% else %}
+                            <td>Nenhum pedido foi realizado.</td>
+                        {% endif %}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="table-secondary fw-bold">
+                            <td></td>
+                            <td>TOTAL</td>
+                            <td>{{ waiter_order_pad.amount }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a class="btn btn-danger mb-2" href="#">Pedir conta</a>
             {% else %}
-                Não há comanda aberta na mesa
+                <div class="alert alert-danger m-8" role="alert">
+                    <h2>Não há comanda aberta para a mesa {{ table.number }}</h2>
+                </div>
             {% endif %}
         </div>
     </div>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('[data-bs-toggle="popover"]').popover();   
+        })
+    </script>
 {% endblock content %}
+
+{% block client_menu %}
+    <a class="btn btn-dark mb-2" href="#">Solicitar atendimento</a>
+{% endblock client_menu %}
+
+{% block client_menu %}
+    <a class="btn btn-dark mb-2" href="{{ table.get_menu_url }}">Ver cardápio</a>
+{% endblock client_menu %}
